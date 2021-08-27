@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.7;
+
+import "../../contracts/ERC3652.sol";
+
+contract ERC3652Mock is ERC3652 {
+    constructor(string memory name_, string memory symbol_) ERC3652(name_, symbol_) {
+    }
+
+    function mint(address to, uint256 tokenId) external {
+        _mint(to, tokenId);
+    }
+}
