@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./ERC3652Proxy.sol";
 
 contract ERC3652 is ERC721 {
+    // solhint-disable-next-line no-empty-blocks
     constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_) {
     }
 

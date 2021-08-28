@@ -24,6 +24,7 @@ contract ERC3652Proxy {
     }
 
     function execute(address target, uint256 value, bytes calldata data) external payable onlyOwner returns(bool, bytes memory) {
+        // solhint-disable-next-line avoid-low-level-calls
         return target.call{ value: value }(data);
     }
 }

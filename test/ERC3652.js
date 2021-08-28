@@ -1,4 +1,4 @@
-const { expectEvent } = require('@openzeppelin/test-helpers');
+// const { expectEvent } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 const { contract } = require('hardhat');
 
@@ -7,7 +7,7 @@ const ERC3652Proxy = artifacts.require('ERC3652Proxy');
 
 contract('ERC3652', async function ([_, w1, w2]) {
     beforeEach(async function () {
-        this.contract = await ERC3652Mock.new("Token", "TKN");
+        this.contract = await ERC3652Mock.new('Token', 'TKN');
     });
 
     it('should be ok', async function () {
