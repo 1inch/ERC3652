@@ -4,26 +4,24 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
+import "./interfaces/IERC3652Deployer.sol";
+
 
 contract ERC3652Proxy {
-    IERC721 immutable public token;
+    address immutable public token;
     uint256 immutable public tokenId;
 
-    modifier onlyOwner {
-        require(msg.sender == owner(), "ERC3652: access denied");
-        _;
-    }
-
-    constructor(uint256 tokenId_) {
-        token = IERC721(msg.sender);
-        tokenId = tokenId_;
+    constructor() {
+        (token, tokenId) = IERC3652Deployer(msg.sender).parameters();
     }
 
     function owner() public view returns(address) {
-        return token.ownerOf(tokenId);
+        return IERC721(token).ownerOf(tokenId);
     }
 
-    function execute(address target, uint256 value, bytes calldata data) external payable onlyOwner returns(bool, bytes memory) {
+    function execute(address target, uint256 value, bytes calldata data) external payable returns(bool, bytes memory) {
+        require(msg.sender == owner(), "ERC3652: access denied");
+
         // solhint-disable-next-line avoid-low-level-calls
         return target.call{ value: value }(data);
     }
