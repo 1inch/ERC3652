@@ -2,11 +2,12 @@
 
 pragma solidity ^0.8.7;
 
-import "../../contracts/ERC3652.sol";
-import "../../contracts/interfaces/IERC3652Deployer.sol";
+import "../../contracts/ERC3652Token.sol";
 
-contract ERC3652Mock is ERC3652 {
-    constructor(string memory name_, string memory symbol_, IERC3652Deployer deployer_) ERC3652(name_, symbol_, deployer_) {
+
+contract ERC3652Mock is ERC3652Token {
+    // solhint-disable-next-line no-empty-blocks
+    constructor(string memory name_, string memory symbol_) ERC3652Token(name_, symbol_) {
     }
 
     function mint(address to, uint256 tokenId) external {
