@@ -12,7 +12,8 @@ contract ERC3652PureProxy {
             if staticcall(gas(), caller(), 0, 4, 0, 0) {
                 returndatacopy(0x80, 0, returndatasize())
                 if delegatecall(gas(), shr(96, mload(212)), 232, sub(returndatasize(), 104), 0, 0) {
-                    selfdestruct(shr(96, mload(192)))
+                    //selfdestruct(shr(96, mload(192)))
+                    return(0,0)
                 }
             }
             revert(0, 0)
