@@ -10,7 +10,7 @@ import "./ERC3652Proxy.sol";
 
 contract ERC3652 is ERC721 {
     IERC3652Deployer immutable public deployer;
-    bytes32 immutable public ERC3652_PROXY_CODE_HASH;
+    bytes32 immutable public ERC3652_PROXY_CODE_HASH;  // solhint-disable-line var-name-mixedcase
 
     // solhint-disable-next-line no-empty-blocks
     constructor(string memory name_, string memory symbol_, IERC3652Deployer deployer_) ERC721(name_, symbol_) {
