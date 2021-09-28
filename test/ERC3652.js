@@ -1,6 +1,9 @@
 require('@openzeppelin/test-helpers');
+const { web3 } = require('@openzeppelin/test-helpers/src/setup');
 const { expect } = require('chai');
 const { contract } = require('hardhat');
+
+const { gasspectEVM } = require('./helpers/profileEVM');
 
 const ERC3652Mock = artifacts.require('ERC3652Mock');
 const TokenMock = artifacts.require('TokenMock');
@@ -25,7 +28,9 @@ contract('ERC3652', async function ([_, w1, w2]) {
 
         expect(await this.dai.balanceOf(nftProxy)).to.be.bignumber.equal('100');
         expect(await this.dai.balanceOf(w1)).to.be.bignumber.equal('0');
-        await this.nft.callFor(123, args.target, args.data, { from: w1 });
+        const receipt = await this.nft.callFor(123, args.target, args.data, { from: w1 });
+        console.log('Gas Used:', receipt.receipt.gasUsed);
+        await gasspectEVM(receipt.tx);
         expect(await this.dai.balanceOf(nftProxy)).to.be.bignumber.equal('0');
         expect(await this.dai.balanceOf(w1)).to.be.bignumber.equal('100');
     });
