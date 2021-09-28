@@ -19,10 +19,10 @@ contract ERC3652Proxy {
         return IERC721(token).ownerOf(tokenId);
     }
 
-    function execute(address target, uint256 value, bytes calldata data) external payable returns(bool, bytes memory) {
+    function execute(address target, bytes calldata data) external payable returns(bool, bytes memory) {
         require(msg.sender == owner(), "ERC3652: access denied");
 
         // solhint-disable-next-line avoid-low-level-calls
-        return target.call{ value: value }(data);
+        return target.call{ value: msg.value }(data);
     }
 }
