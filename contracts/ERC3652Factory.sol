@@ -17,7 +17,7 @@ contract ERC3652Factory is ERC3652PureProxyFactory {
         require(msg.sender == token.ownerOf(tokenId), "ERC3652: access denied");
         bytes32 salt = keccak256(abi.encode(token, tokenId));
         require(
-            _pureProxyDelegateCall(salt, msg.sender, target, msg.value, data),
+            _pureProxyDelegateCall(salt, target, data),
             "ERC3652: call failed"
         );
     }

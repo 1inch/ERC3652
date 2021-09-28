@@ -9,7 +9,7 @@ import "./ERC3652PureProxy.sol";
 
 contract ERC3652PureProxyFactory {
     bytes32 immutable public pureProxyCodeHash;
-    bytes public ownerPlusTargetPlusData;
+    bytes public targetPlusData;
 
     constructor() {
         pureProxyCodeHash = keccak256(type(ERC3652PureProxy).creationCode);
@@ -19,13 +19,13 @@ contract ERC3652PureProxyFactory {
         return Create2.computeAddress(salt, pureProxyCodeHash);
     }
 
-    function _pureProxyDelegateCall(bytes32 salt, address owner, address target, uint256 value, bytes calldata data) internal returns(bool) {
-        ownerPlusTargetPlusData = abi.encodePacked(owner, target, data);
-        try new ERC3652PureProxy{ salt: salt, value: value }() returns (ERC3652PureProxy) {
-            delete ownerPlusTargetPlusData;
+    function _pureProxyDelegateCall(bytes32 salt, address target, bytes calldata data) internal returns(bool) {
+        targetPlusData = abi.encodePacked(target, data);
+        try new ERC3652PureProxy{ salt: salt, value: msg.value }() returns (ERC3652PureProxy) {
+            delete targetPlusData;
             return true;
         } catch (bytes memory) {
-            delete ownerPlusTargetPlusData;
+            delete targetPlusData;
             return false;
         }
     }

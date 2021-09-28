@@ -19,7 +19,7 @@ contract ERC3652Token is ERC721, ERC3652PureProxyFactory {
     function callFor(uint256 tokenId, address target, bytes calldata data) external payable {
         require(msg.sender == ownerOf(tokenId), "ERC3652: access denied");
         require(
-            _pureProxyDelegateCall(bytes32(tokenId), msg.sender, target, msg.value, data),
+            _pureProxyDelegateCall(bytes32(tokenId), target, data),
             "ERC3652: call failed"
         );
     }

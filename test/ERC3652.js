@@ -9,7 +9,13 @@ const ERC3652Mock = artifacts.require('ERC3652Mock');
 const TokenMock = artifacts.require('TokenMock');
 const ImplMock = artifacts.require('ImplMock');
 
-contract('ERC3652', async function ([_, w1, w2]) {
+describe('ERC3652', async function () {
+    let _, w1, w2;
+
+    before(async function () {
+        [_, w1, w2] = await web3.eth.getAccounts();
+    });
+
     beforeEach(async function () {
         this.nft = await ERC3652Mock.new('Token', 'TKN');
         this.dai = await TokenMock.new('DAI', 'DAI');
