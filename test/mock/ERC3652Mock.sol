@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.7;
+pragma solidity 0.8.8;
 
 import "../../contracts/ERC3652.sol";
 import "../../contracts/interfaces/IERC3652Deployer.sol";

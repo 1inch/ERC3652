@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.7;
+pragma solidity 0.8.8;
 
 interface IERC3652Deployer {
     function ERC3652_PROXY_CODE_HASH() external view returns(bytes32);  // solhint-disable-line func-name-mixedcase
