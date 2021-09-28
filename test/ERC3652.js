@@ -1,7 +1,6 @@
 require('@openzeppelin/test-helpers');
 const { web3 } = require('@openzeppelin/test-helpers/src/setup');
 const { expect } = require('chai');
-const { contract } = require('hardhat');
 
 const { gasspectEVM } = require('./helpers/profileEVM');
 
@@ -10,10 +9,10 @@ const TokenMock = artifacts.require('TokenMock');
 const ImplMock = artifacts.require('ImplMock');
 
 describe('ERC3652', async function () {
-    let _, w1, w2;
+    let w1;
 
     before(async function () {
-        [_, w1, w2] = await web3.eth.getAccounts();
+        [w1] = await web3.eth.getAccounts();
     });
 
     beforeEach(async function () {
