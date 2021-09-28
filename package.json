@@ -4,7 +4,7 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git@github.com:k06a/ERC3652.git"
+    "url": "git@github.com:1inch/ERC3652.git"
   },
   "license": "MIT",
   "dependencies": {
