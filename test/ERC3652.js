@@ -5,7 +5,6 @@ const ERC3652Mock = artifacts.require('ERC3652Mock');
 const ERC3652Deployer = artifacts.require('ERC3652Deployer');
 const ERC3652Proxy = artifacts.require('ERC3652Proxy');
 const TokenMock = artifacts.require('TokenMock');
-const ImplMock = artifacts.require('ImplMock');
 
 describe('ERC3652', async function () {
     let w1;
@@ -18,7 +17,6 @@ describe('ERC3652', async function () {
         this.deployer = await ERC3652Deployer.new();
         this.dai = await TokenMock.new('DAI', 'DAI');
         this.nft = await ERC3652Mock.new('Token', 'TKN', this.deployer.address);
-        this.impl = await ImplMock.new();
     });
 
     it('should be ok', async function () {
@@ -41,8 +39,8 @@ describe('ERC3652', async function () {
         await this.dai.mint(proxy.address, 100);
 
         const args = {
-            target: this.impl.address,
-            data: this.impl.contract.methods.transferToken(this.dai.address, w1, 100).encodeABI(),
+            target: this.dai.address,
+            data: this.dai.contract.methods.transfer(w1, 100).encodeABI(),
         };
 
         expect(await this.dai.balanceOf(proxy.address)).to.be.bignumber.equal('100');
