@@ -23,6 +23,6 @@ contract ERC3652Proxy {
         require(msg.sender == owner(), "ERC3652: access denied");
 
         // solhint-disable-next-line avoid-low-level-calls
-        return target.call{ value: msg.value }(data);
+        return target.delegatecall(data);
     }
 }
