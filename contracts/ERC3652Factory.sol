@@ -2,23 +2,21 @@
 
 pragma solidity ^0.8.8;
 
+import "@openzeppelin/contracts/utils/Create2.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-import "./ERC3652PureProxyFactory.sol";
+import "./ERC3652Proxy.sol";
 
-
-contract ERC3652Factory is ERC3652PureProxyFactory {
-    function addressOf(IERC721 token, uint256 tokenId) external view returns(address) {
-        bytes32 salt = keccak256(abi.encode(token, tokenId));
-        return _pureProxyAddressOf(salt);
+contract ERC3652Factory {
+    function addressOf(IERC721 token, uint256 tokenId) public view returns(address) {
+        bytes32 codeHash = keccak256(abi.encodePacked(
+            type(ERC3652Proxy).creationCode,
+            abi.encode(token, tokenId)
+        ));
+        return Create2.computeAddress(0, codeHash);
     }
 
-    function callFor(IERC721 token, uint256 tokenId, address target, bytes calldata data) external payable {
-        require(msg.sender == token.ownerOf(tokenId), "ERC3652: access denied");
-        bytes32 salt = keccak256(abi.encode(token, tokenId));
-        require(
-            _pureProxyDelegateCall(salt, target, data),
-            "ERC3652: call failed"
-        );
+    function deploy(IERC721 token, uint256 tokenId) public returns(ERC3652Proxy) {
+        return new ERC3652Proxy{ salt: 0 }(token, tokenId);
     }
 }

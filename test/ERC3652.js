@@ -1,48 +1,44 @@
 require('@openzeppelin/test-helpers');
+const { expectRevert } = require('@openzeppelin/test-helpers');
 const { web3 } = require('@openzeppelin/test-helpers/src/setup');
 const { expect } = require('chai');
 
 const { gasspectEVM } = require('./helpers/profileEVM');
 
-const ERC3652Mock = artifacts.require('ERC3652Mock');
+const ERC3652Factory = artifacts.require('ERC3652Factory');
+const ERC3652Proxy = artifacts.require('ERC3652Proxy');
 const TokenMock = artifacts.require('TokenMock');
-const ImplMock = artifacts.require('ImplMock');
+const NFTMock = artifacts.require('NFTMock');
 
 describe('ERC3652', async function () {
-    let w1;
+    let w1, w2;
 
     before(async function () {
-        [w1] = await web3.eth.getAccounts();
+        [w1, w2] = await web3.eth.getAccounts();
     });
 
     beforeEach(async function () {
-        this.nft = await ERC3652Mock.new('Token', 'TKN');
+        this.nft = await NFTMock.new('Game of NTF', 'GONFT');
         this.dai = await TokenMock.new('DAI', 'DAI');
-        this.impl = await ImplMock.new();
+        this.factory = await ERC3652Factory.new();
     });
 
-    it('should be ok', async function () {
+    it.only('should work properly', async function () {
         await this.nft.mint(w1, 123);
-        const nftProxy = await this.nft.addressOf(123);
-        await this.dai.mint(nftProxy, 100);
+        const proxyAddress = await this.factory.addressOf(this.nft.address, 123);
+        await this.dai.mint(proxyAddress, 100);
 
-        const args = {
-            target: this.impl.address,
-            data: this.impl.contract.methods.transferToken(this.dai.address, w1, 100).encodeABI(),
-        };
+        await this.factory.deploy(this.nft.address, 123);
+        const nftProxy = await ERC3652Proxy.at(proxyAddress);
 
-        expect(await this.dai.balanceOf(nftProxy)).to.be.bignumber.equal('100');
-        expect(await this.dai.balanceOf(w1)).to.be.bignumber.equal('0');
-        const receipt = await this.nft.callFor(123, args.target, args.data, { from: w1 });
-        console.log('Gas Used:', receipt.receipt.gasUsed);
-        await gasspectEVM(receipt.tx);
-        expect(await this.dai.balanceOf(nftProxy)).to.be.bignumber.equal('0');
-        expect(await this.dai.balanceOf(w1)).to.be.bignumber.equal('100');
-    });
+        await expectRevert(
+            nftProxy.call(this.dai.address, 0, this.dai.contract.methods.transfer(w1, 50).encodeABI(), { from: w2 }),
+            'AccessDenied',
+        );
 
-    it('should be ok 2', async function () {
-        await this.nft.mint(w1, 777);
-        await this.nft.mint(w1, 888);
-        await this.nft.mint(w1, 999);
+        await nftProxy.call(this.dai.address, 0, this.dai.contract.methods.transfer(w1, 50).encodeABI(), { from: w1 });
+
+        expect(await this.dai.balanceOf(nftProxy.address)).to.be.bignumber.equal('50');
+        expect(await this.dai.balanceOf(w1)).to.be.bignumber.equal('50');
     });
 });
