@@ -24,8 +24,8 @@ describe('ERC3652', async function () {
         this.factory = await ERC3652.new();
         this.tokenTransferDelegatee = await TokenTransferDelegatee.new();
 
-        console.log('Proxy bytecode =', await this.factory.getProxyCode(this.nft.address, 123));
-        console.log('Proxy bytecode length =', (await this.factory.getProxyCode(this.nft.address, 123)).length);
+        console.log('Proxy bytecode =', await this.factory.createProxyCode(this.nft.address, 123));
+        console.log('Proxy bytecode length =', (await this.factory.createProxyCode(this.nft.address, 123)).length);
     });
 
     it.only('should work properly', async function () {
