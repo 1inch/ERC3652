@@ -5,10 +5,11 @@ const { expect } = require('chai');
 
 const { gasspectEVM } = require('./helpers/profileEVM');
 
-const ERC3652Factory = artifacts.require('ERC3652Factory');
-const ERC3652Proxy = artifacts.require('ERC3652Proxy');
+const ERC3652 = artifacts.require('ERC3652');
+const ERC3652Proxy = artifacts.require('IERC3652Proxy');
 const TokenMock = artifacts.require('TokenMock');
 const NFTMock = artifacts.require('NFTMock');
+const TokenTransferDelegatee = artifacts.require('TokenTransferDelegatee');
 
 describe('ERC3652', async function () {
     let w1, w2;
@@ -20,7 +21,11 @@ describe('ERC3652', async function () {
     beforeEach(async function () {
         this.nft = await NFTMock.new('Game of NTF', 'GONFT');
         this.dai = await TokenMock.new('DAI', 'DAI');
-        this.factory = await ERC3652Factory.new();
+        this.factory = await ERC3652.new();
+        this.tokenTransferDelegatee = await TokenTransferDelegatee.new();
+
+        console.log('Proxy bytecode =', await this.factory.getProxyCode(this.nft.address, 123));
+        console.log('Proxy bytecode length =', (await this.factory.getProxyCode(this.nft.address, 123)).length);
     });
 
     it.only('should work properly', async function () {
@@ -31,12 +36,17 @@ describe('ERC3652', async function () {
         await this.factory.deploy(this.nft.address, 123);
         const nftProxy = await ERC3652Proxy.at(proxyAddress);
 
-        await expectRevert(
-            nftProxy.call(this.dai.address, 0, this.dai.contract.methods.transfer(w1, 50).encodeABI(), { from: w2 }),
-            'AccessDenied',
+        await expectRevert.unspecified(
+            nftProxy.call(this.dai.address, this.dai.contract.methods.transfer(w1, 50).encodeABI(), { from: w2 }),
         );
 
-        await nftProxy.call(this.dai.address, 0, this.dai.contract.methods.transfer(w1, 50).encodeABI(), { from: w1 });
+        // await nftProxy.call(this.dai.address, this.dai.contract.methods.transfer(w1, 50).encodeABI(), { from: w1 });
+
+        await nftProxy.call(
+            this.tokenTransferDelegatee.address,
+            this.tokenTransferDelegatee.contract.methods.tokenTransfer(this.dai.address, w1, 50).encodeABI(),
+            { from: w1 },
+        );
 
         expect(await this.dai.balanceOf(nftProxy.address)).to.be.bignumber.equal('50');
         expect(await this.dai.balanceOf(w1)).to.be.bignumber.equal('50');

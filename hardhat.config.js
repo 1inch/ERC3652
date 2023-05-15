@@ -4,6 +4,7 @@ require('dotenv').config();
 require('hardhat-deploy');
 require('hardhat-gas-reporter');
 require('solidity-coverage');
+require("hardhat-tracer");
 
 const networks = require('./hardhat.networks');
 
@@ -16,18 +17,21 @@ module.exports = {
         currency: 'USD',
     },
     solidity: {
+        version: '0.8.20',
         settings: {
             optimizer: {
                 enabled: true,
                 runs: 1000000,
             },
         },
-        version: '0.8.8',
     },
     namedAccounts: {
         deployer: {
             default: 0,
         },
+    },
+    tracer: {
+        enableAllOpcodes: true,
     },
     networks,
 };
