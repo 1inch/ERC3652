@@ -79,10 +79,11 @@ library ERC3652Lib {
         hex"3d"     // returndatasize   // rds rds success
         hex"5f"     // push0            // 0 rds rds success
         hex"3e"     // returndatacopy   // success
+        // (success ? return : revert)(0, rds)
         hex"5f"     // push0            // 0 success
         hex"3d"     // returndatasize   // rds 0 success
         hex"91"     // swap2            // success 0 rds
-        hex"60_93"  // push1 0x8b       // 0x8b success 0 rds
+        hex"60_93"  // push1 0x93       // 0x93 success 0 rds
         hex"57"     // jumpi            // 0 rds
         hex"fd"     // revert
         hex"5b"     // jumpdest
