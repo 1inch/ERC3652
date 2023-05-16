@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/utils/Create2.sol";
-
 library ERC3652Lib {
     uint256 public constant ADDRESS_MASK = (1 << 160) - 1;
     uint256 public constant PROXY_CODE_TOKEN_ADDRESS_BYTE_OFFSET = 77;
@@ -92,7 +90,7 @@ library ERC3652Lib {
 
     function createProxyCode(address token, uint256 tokenId) internal pure returns(bytes memory code) {
         code = PROXY_CODE;
-        assembly ("memory-safe") {
+        assembly ("memory-safe") {  // solhint-disable-line no-inline-assembly
             let codePtr := add(code, 0x20)
             let tokenPtr := add(codePtr, PROXY_CODE_TOKEN_ADDRESS_BYTE_OFFSET)
             mstore(tokenPtr, or(mload(tokenPtr), token))
@@ -101,7 +99,7 @@ library ERC3652Lib {
     }
 
     function getTokenAndId(bytes memory code) internal pure returns(address token, uint256 tokenId) {
-        assembly {
+        assembly("memory-safe") {  // solhint-disable-line no-inline-assembly
             let ptr := add(code, 0x20)
             token := and(mload(add(ptr, PROXY_CODE_TOKEN_ADDRESS_BYTE_OFFSET)), ADDRESS_MASK)
             tokenId := mload(add(ptr, PROXY_CODE_TOKEN_ID_BYTE_OFFSET))

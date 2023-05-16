@@ -3,8 +3,6 @@ const { expectRevert } = require('@openzeppelin/test-helpers');
 const { web3 } = require('@openzeppelin/test-helpers/src/setup');
 const { expect } = require('chai');
 
-const { gasspectEVM } = require('./helpers/profileEVM');
-
 const ERC3652 = artifacts.require('ERC3652');
 const ERC3652Proxy = artifacts.require('IERC3652Proxy');
 const TokenMock = artifacts.require('TokenMock');

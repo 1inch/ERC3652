@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/utils/Create2.sol";
+import { Create2 } from "@openzeppelin/contracts/utils/Create2.sol";
 
-import "./ERC3652Lib.sol";
+import { ERC3652Lib } from "./ERC3652Lib.sol";
 
 contract ERC3652 {
     function addressOf(address token, uint256 tokenId) public view returns(address) {
