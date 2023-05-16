@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "@1inch/solidity-utils/contracts/libraries/SafeERC20.sol";
+import { IERC20, SafeERC20 } from "@1inch/solidity-utils/contracts/libraries/SafeERC20.sol";
 
 contract TokenTransferDelegatee {
     using SafeERC20 for IERC20;

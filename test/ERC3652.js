@@ -3,8 +3,6 @@ const { expectRevert } = require('@openzeppelin/test-helpers');
 const { web3 } = require('@openzeppelin/test-helpers/src/setup');
 const { expect } = require('chai');
 
-const { gasspectEVM } = require('./helpers/profileEVM');
-
 const ERC3652 = artifacts.require('ERC3652');
 const ERC3652Proxy = artifacts.require('IERC3652Proxy');
 const TokenMock = artifacts.require('TokenMock');
@@ -24,8 +22,8 @@ describe('ERC3652', async function () {
         this.factory = await ERC3652.new();
         this.tokenTransferDelegatee = await TokenTransferDelegatee.new();
 
-        console.log('Proxy bytecode =', await this.factory.getProxyCode(this.nft.address, 123));
-        console.log('Proxy bytecode length =', (await this.factory.getProxyCode(this.nft.address, 123)).length);
+        console.log('Proxy bytecode =', await this.factory.createProxyCode(this.nft.address, 123));
+        console.log('Proxy bytecode length =', (await this.factory.createProxyCode(this.nft.address, 123)).length);
     });
 
     it.only('should work properly', async function () {
