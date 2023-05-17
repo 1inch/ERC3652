@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 
 library ERC3652Lib {
     uint256 public constant ADDRESS_MASK = (1 << 160) - 1;
-    uint256 public constant PROXY_CODE_TOKEN_ADDRESS_BYTE_OFFSET = 77;
-    uint256 public constant PROXY_CODE_TOKEN_ID_BYTE_OFFSET = 47;
+    uint256 public constant PROXY_CODE_TOKEN_ADDRESS_BYTE_OFFSET = 83;
+    uint256 public constant PROXY_CODE_TOKEN_ID_BYTE_OFFSET = 53;
 
     bytes public constant PROXY_CODE =
         // Universal constructor (11 bytes length)
@@ -22,6 +22,12 @@ library ERC3652Lib {
         hex"f3"    // return
 
         // Proxy code
+        // if iszero(calldatasize()) return(0,0)
+        hex"36"    // calldatasize
+        hex"60_05" // push1 5
+        hex"57"    // jumpi
+        hex"00"    // stop, aka return(0,0)
+        hex"5b"    // jumpdest
         // mstore(0, IERC721.ownerOf.selector)
         hex"7f_6352211e00000000000000000000000000000000000000000000000000000000" // push4 0x6352211e
         hex"5f"    // push0
@@ -44,7 +50,7 @@ library ERC3652Lib {
         hex"51"    // mload
         hex"33"    // caller
         hex"14"    // eq
-        hex"60_6f" // push1 0x6f
+        hex"60_75" // push1 0x75
         hex"57"    // jumpi
         hex"5f"    // push0
         hex"5f"    // push0
@@ -81,7 +87,7 @@ library ERC3652Lib {
         hex"5f"     // push0            // 0 success
         hex"3d"     // returndatasize   // rds 0 success
         hex"91"     // swap2            // success 0 rds
-        hex"60_93"  // push1 0x93       // 0x93 success 0 rds
+        hex"60_99"  // push1 0x99       // 0x99 success 0 rds
         hex"57"     // jumpi            // 0 rds
         hex"fd"     // revert
         hex"5b"     // jumpdest
