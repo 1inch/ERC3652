@@ -7,6 +7,22 @@ library ERC3652Lib {
     uint256 public constant PROXY_CODE_TOKEN_ADDRESS_BYTE_OFFSET = 83;
     uint256 public constant PROXY_CODE_TOKEN_ID_BYTE_OFFSET = 53;
 
+    //
+    // Solidity pseudocode:
+    //
+    // address private token;
+    // uint256 private tokenId;
+    // function call(address target, bytes calldata data) external payable {
+    //     if (msg.data.length == 0) {
+    //         return;
+    //     }
+    //     if (token.ownerOf(tokenId) != msg.sender) {
+    //         revert("");
+    //     }
+    //    (bool success, bytes memory result) = target.delegatecall(data);
+    //    success ? return(result) : revert(result);
+    // }
+    //
     bytes public constant PROXY_CODE =
         // Universal constructor (11 bytes length)
         // codecopy(0, 0, codesize())
